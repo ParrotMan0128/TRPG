@@ -327,6 +327,32 @@ int main()
     Item StoreArmor[STORE_ARMOR_MAX] = {};
 
     //각 아이템 정보를 설정해준다.
+    strcpy_s(StoreWeapon[0].Name, "롱소드");
+    strcpy_s(StoreWeapon[0].Description, "가장 기본적인 검.");
+    strcpy_s(StoreWeapon[0].TypeName, "검");
+    StoreWeapon[0].type = ITEM_TYPE_WEAPON;
+    StoreWeapon[0].Min = 10;
+    StoreWeapon[0].Max = 20;
+    StoreWeapon[0].BuyPrice = 2000;
+    StoreWeapon[0].SellPrice = 1400;
+
+    strcpy_s(StoreWeapon[1].Name, "곡궁");
+    strcpy_s(StoreWeapon[1].Description, "가장 기본적인 활.");
+    strcpy_s(StoreWeapon[1].TypeName, "활");
+    StoreWeapon[1].type = ITEM_TYPE_WEAPON;
+    StoreWeapon[1].Min = 15;
+    StoreWeapon[1].Max = 25;
+    StoreWeapon[1].BuyPrice = 2500;
+    StoreWeapon[1].SellPrice = 1750;
+
+    strcpy_s(StoreWeapon[2].Name, "나무 완드");
+    strcpy_s(StoreWeapon[2].Description, "가장 기본적인 완드.");
+    strcpy_s(StoreWeapon[2].TypeName, "완드");
+    StoreWeapon[2].type = ITEM_TYPE_WEAPON;
+    StoreWeapon[2].Min = 20;
+    StoreWeapon[2].Max = 30;
+    StoreWeapon[2].BuyPrice = 3000;
+    StoreWeapon[2].SellPrice = 2100;
 
     //로비 메뉴
     while (true) {
@@ -620,6 +646,71 @@ int main()
                         PRINT_LINE;
 
                         //판매 목록을 보여준다.
+                        for (int i = 0; i < STORE_WEAPON_MAX; ++i) {
+
+                            std::cout << "[" << i + 1 << "] " << StoreWeapon[i].Name << std::endl;
+                            std::cout << "종류 : " << StoreWeapon[i].TypeName << std::endl;
+                            std::cout << "공격력 : " << StoreWeapon[i].Min << " ~ " << StoreWeapon[i].Max << std::endl;
+                            std::cout << "구매 가격 : " << StoreWeapon[i].BuyPrice << "G" << std::endl;
+                            std::cout << "판매 가격 : " << StoreWeapon[i].SellPrice << "G" << std::endl;
+                            std::cout << "《" << StoreWeapon[i].Description << "》" << std::endl;
+                            PRINT_LINE;
+
+                        }
+
+                        std::cout << "[" << STORE_WEAPON_MAX + 1 << "] 뒤로가기" << std::endl;
+                        PRINT_LINE;
+                        std::cout << "[!] 보유 금액 : " << Player.inventory.Gold << "G" << std::endl;
+                        std::cout << "[!] 남은 공간 : " << MAX_INVENTORY_SIZE - Player.inventory.ItemCount << std::endl;
+                        PRINT_LINE;
+                        PRINT_INPUT_ARROW;
+
+                        std::cin >> InputNum;
+
+                        if (std::cin.fail()) {
+
+                            std::cin.clear();
+                            std::cin.ignore(1024, '\n');
+
+                            continue;
+
+                        }
+                        else if (InputNum == STORE_WEAPON_MAX + 1) {
+
+                            break;
+
+                        }
+                        else if (InputNum > STORE_WEAPON_MAX + 1 || InputNum < 1) {
+
+                            std::cout << "[!] 잘못 선택하셨습니다." << std::endl;
+                            system("pause");
+                            continue;
+
+                        }
+
+                        int WeaponIndex = InputNum - 1;
+
+                        if (Player.inventory.ItemCount == MAX_INVENTORY_SIZE) {
+
+                            std::cout << "[!] 인벤토리가 꽉 찼습니다." << std::endl;
+                            system("pause");
+                            continue;
+
+                        }
+                        else if (Player.inventory.Gold < StoreWeapon[WeaponIndex].BuyPrice) {
+
+                            std::cout << "[!] 골드가 모자랍니다." << std::endl;
+                            system("pause");
+                            continue;
+
+                        }
+
+                        Player.inventory.Item[Player.inventory.ItemCount] = StoreWeapon[WeaponIndex];
+                        Player.inventory.ItemCount = Player.inventory.ItemCount + 1;
+                        Player.inventory.Gold = Player.inventory.Gold - StoreWeapon[WeaponIndex].BuyPrice;
+
+                        std::cout << "[!] " << StoreWeapon[WeaponIndex].Name << "을(를) 구매했습니다." << std::endl;
+                        system("pause");
 
                     }
 
@@ -641,6 +732,21 @@ int main()
 
         //인벤토리 메뉴
         case MAIN_MENU_INVENTORY:
+
+            /*PRINT_LINE;
+            std::cout << "※ 인벤토리 ※ " << std::endl;
+            PRINT_LINE;
+            std::cout << "※ 플레이어 정보 ※" << std::endl;
+            PRINT_LINE;
+            std::cout << "이름 | " << Player.Name << std::endl;
+            std::cout << "직업 | " << Player.JobName << std::endl;
+            std::cout << "레벨 | " << Player.Level << " / 경험치 | " << Player.Exp << std::endl;
+            std::cout << "체력 | " << Player.HP << "/(" << Player.HPMax << ")" << std::endl;
+            std::cout << "마나 | " << Player.MP << "/(" << Player.MPMax << ")" << std::endl;
+            std::cout << "공격력 | " << Player.ATKMin << " ~ " << Player.ATKMax << std::endl;
+            std::cout << "방어력 | " << Player.DEFMin << " ~ " << Player.DEFMax << std::endl;
+            std::cout << "보유 골드 | " << Player.inventory.Gold << "G" << std::endl;
+            PRINT_LINE; */
 
             break;
 
